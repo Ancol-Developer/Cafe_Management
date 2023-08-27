@@ -60,3 +60,27 @@ Create table BillInfo
 	Foreign key (idBill) references dbo.Bill(id),
 	Foreign key (idFood) references dbo.Food(id),
 )
+
+insert into dbo.Account(
+	Username,DisplayName,Password,Type
+)
+values(
+	N'K9',N'RongK9',N'1',1
+)
+insert into dbo.Account(
+	Username,DisplayName,Password,Type
+)
+values(
+	N'staff',N'staff',N'1',0
+)
+go
+
+Create proc USP_GetAccountByUserName
+@userName nvarchar(100)
+As
+Begin
+	select * from dbo.Account where Username= @userName
+End
+Go
+
+Exec dbo.USP_GetAccountByUserName @userName = N'K9'
