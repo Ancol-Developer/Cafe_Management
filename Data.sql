@@ -95,3 +95,24 @@ End
 Go
 
 Exec dbo.USP_Login @userName=N'k9' , @passWord = N'1'
+
+
+DECLARE @i int =0
+While @i<=10
+Begin
+	Insert dbo.TableFood(name) Values (N'Bàn '+ CAST(@i As nvarchar(100)))	
+	Set @i=@i+1
+End
+
+
+Select * from dbo.TableFood
+go
+
+Create proc USP_GetTableList
+As 
+Begin
+	Select * From dbo.TableFood
+End
+go
+
+EXEC dbo.USP_GetTableList

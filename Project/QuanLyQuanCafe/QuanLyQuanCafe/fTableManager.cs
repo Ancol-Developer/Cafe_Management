@@ -1,4 +1,6 @@
-﻿using System;
+﻿using QuanLyQuanCafe.DAO;
+using QuanLyQuanCafe.DTO;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -16,7 +18,35 @@ namespace QuanLyQuanCafe
         public fTableManager()
         {
             InitializeComponent();
+            LoadTable();
         }
+        #region Method
+        void LoadTable()
+        {
+            List<Table> tableList= TableDAO.Instance.LoadTableList();
+            foreach (Table items in tableList)
+            {
+                Button button = new Button()
+                {
+                    Width = TableDAO.TableWidth,
+                    Height= TableDAO.TableHeight
+                };
+                button.Text = items.Name + Environment.NewLine + items.Status;
+                switch (items.Status)
+                {
+                    case "Trong":
+                        button.BackColor = Color.Aqua;
+                        break;
+                    default: button.BackColor = Color.LightPink; 
+                        break;
+                }
+                flpTable.Controls.Add(button);
+                
+            }
+        }
+
+        #endregion
+        #region Event
 
         private void btnAdd_Click(object sender, EventArgs e)
         {
@@ -39,5 +69,6 @@ namespace QuanLyQuanCafe
             fAdmin f = new fAdmin();
             f.ShowDialog();
         }
+        #endregion
     }
 }

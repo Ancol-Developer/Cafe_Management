@@ -17,6 +17,7 @@ namespace QuanLyQuanCafe.DAO
         {
             
         }
+        // using Stor proc han che SQP injection
         public bool Login(string userName,string passWord)
         {
             string query = "Exec USP_Login @userName , @passWord";
