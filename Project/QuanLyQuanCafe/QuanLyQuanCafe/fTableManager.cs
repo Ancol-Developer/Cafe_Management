@@ -32,6 +32,8 @@ namespace QuanLyQuanCafe
                     Height= TableDAO.TableHeight
                 };
                 button.Text = items.Name + Environment.NewLine + items.Status;
+                button.Click += Button_Click;
+                button.Tag = items;
                 switch (items.Status)
                 {
                     case "Trong":
@@ -44,10 +46,29 @@ namespace QuanLyQuanCafe
                 
             }
         }
+        void ShowBill(int id)
+        {
+            lsvBill.Items.Clear();
+            List<MenuFood> listBillInfor = MenuDAO.Instance.GetListMenuByTable(id);
+            foreach (MenuFood item in listBillInfor)
+            {
+                ListViewItem lsvItem = new ListViewItem(item.FoodName.ToString());
+                lsvItem.SubItems.Add(item.Count.ToString());
+                lsvItem.SubItems.Add(item.Price.ToString());
+                lsvItem.SubItems.Add(item.TotalPrice.ToString());
+                lsvBill.Items.Add(lsvItem);
+            }
+
+        }
+
 
         #endregion
         #region Event
-
+        private void Button_Click(object sender, EventArgs e)
+        {
+            int tableID=((sender as Button).Tag as Table).ID;
+            ShowBill(tableID);
+        }
         private void btnAdd_Click(object sender, EventArgs e)
         {
 

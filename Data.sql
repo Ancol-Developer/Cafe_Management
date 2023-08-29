@@ -96,7 +96,7 @@ Go
 
 Exec dbo.USP_Login @userName=N'k9' , @passWord = N'1'
 
-
+-- Thêm bàn
 DECLARE @i int =0
 While @i<=10
 Begin
@@ -116,3 +116,73 @@ End
 go
 
 EXEC dbo.USP_GetTableList
+ 
+-- thêm category
+Insert dbo.FoodCetagory
+(name)
+Values (N'Hải sản')
+Insert dbo.FoodCetagory
+(name)
+Values (N'Nông sản')
+Insert dbo.FoodCetagory
+(name)
+Values (N'Lâm sản')
+Insert dbo.FoodCetagory
+(name)
+Values (N'Nước')
+-- thêm món ăn
+Insert dbo.Food
+(name,idCategory,price)
+Values (N'Mực một nắng nướng sa tế',1,120000)
+Insert dbo.Food
+(name,idCategory,price)
+Values (N'Nghêu hấp xả',1,50000)
+Insert dbo.Food
+(name,idCategory,price)
+Values (N'Dê nướng',2,170000)
+Insert dbo.Food
+(name,idCategory,price)
+Values (N'Heo rừng nướng',3,160000)
+Insert dbo.Food
+(name,idCategory,price)
+Values (N'Cafe',4,20000)
+
+--thêm bill
+Insert dbo.Bill
+(DateCheckin,DateCheckOut,idTable,status)
+values(GETDATE(),Null,1,0)
+Insert dbo.Bill
+(DateCheckin,DateCheckOut,idTable,status)
+values(GETDATE(),Null,2,0)
+Insert dbo.Bill
+(DateCheckin,DateCheckOut,idTable,status)
+values(GETDATE(),GetDate(),3,1)
+--thêm bill infor
+Insert dbo.BillInfo
+(idBill,idFood,count)
+values(1,1,2)
+Insert dbo.BillInfo
+(idBill,idFood,count)
+values(1,3,4)
+Insert dbo.BillInfo
+(idBill,idFood,count)
+values(1,5,1)
+Insert dbo.BillInfo
+(idBill,idFood,count)
+values(2,1,2)
+Insert dbo.BillInfo
+(idBill,idFood,count)
+values(2,5,2)
+Insert dbo.BillInfo
+(idBill,idFood,count)
+values(3,1,2)
+go
+
+
+Select * from dbo.Bill
+Select * From dbo.BillInfo
+Select * From Dbo.Food
+Select * from dbo.FoodCetagory
+
+Select f.name,bi.count,f.price,f.price*bi.count as totalPrice from dbo.BillInfo as bi, dbo.Bill as b,dbo.Food as f
+Where bi.idBill = b.id and bi.idFood=f.id and b.idTable=3
