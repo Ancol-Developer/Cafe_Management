@@ -26,6 +26,8 @@ namespace QuanLyQuanCafe
         #region Method
         void LoadTable()
         {
+            // clear controls --- tranh add ban lien tuc
+            flpTable.Controls.Clear();
             List<Table> tableList= TableDAO.Instance.LoadTableList();
             foreach (Table items in tableList)
             {
@@ -35,8 +37,10 @@ namespace QuanLyQuanCafe
                     Height= TableDAO.TableHeight
                 };
                 button.Text = items.Name + Environment.NewLine + items.Status;
+                // Add button click cho table
                 button.Click += Button_Click;
                 button.Tag = items;
+                // doi mau ban 'trong' va 'co nguoi'
                 switch (items.Status)
                 {
                     case "Trong":
@@ -51,9 +55,11 @@ namespace QuanLyQuanCafe
         }
         void ShowBill(int id)
         {
+            //  Xoa bill cu tranh add nhieu bill tren cung 1 listView
             lsvBill.Items.Clear();
             List<MenuFood> listBillInfor = MenuDAO.Instance.GetListMenuByTable(id);
             float totalPrice = 0;
+            // add field tto lsvItem
             foreach (MenuFood item in listBillInfor)
             {
                 ListViewItem lsvItem = new ListViewItem(item.FoodName.ToString());
@@ -63,10 +69,10 @@ namespace QuanLyQuanCafe
                 totalPrice += item.TotalPrice;
                 lsvBill.Items.Add(lsvItem);
             }
+            // chuyen doi vung ve VietNam- vnd
             CultureInfo culture = new CultureInfo("vi-VN");
             //Thread.CurrentThread.CurrentCulture = culture;
             txbTotalPrice.Text = totalPrice.ToString("c",culture);
-
         }
         void LoadCategory()
         {
@@ -89,7 +95,6 @@ namespace QuanLyQuanCafe
             int tableID=((sender as Button).Tag as Table).ID;
             lsvBill.Tag = (sender as Button).Tag;
             ShowBill(tableID);
-
         }
         private void btnAdd_Click(object sender, EventArgs e)
         {   
@@ -108,6 +113,8 @@ namespace QuanLyQuanCafe
             }
             // reload button
             ShowBill(table.ID);
+            // Load lai table sau khi add mon -- hien thi ban 'trong' ban 'co nguoi'
+            LoadTable();
         }
 
         private void đăngXuấtToolStripMenuItem_Click(object sender, EventArgs e)
@@ -138,6 +145,22 @@ namespace QuanLyQuanCafe
             id = selected.ID;
             LoadFoodListByCategoryID(id);
         }
+        private void btnCheckOut_Click(object sender, EventArgs e)
+        {
+            Table table= lsvBill.Tag as Table;
+            int idBill = BillDAO.Instance.GetUncheckBillIDByTableID(table.ID);
+            if (idBill!=-1)
+            {
+                if(MessageBox.Show("Bạn có chắc chắn thanh toán cho bàn " + table.Name,"Thông báo", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
+                {
+                    BillDAO.Instance.CheckOut(idBill);
+                    ShowBill(table.ID);
+                    // Load lai table sau khi thanh toan -- hien thi ban 'trong' ban 'co nguoi'
+                    LoadTable();
+                }
+            }
+        }
+
         #endregion
 
 

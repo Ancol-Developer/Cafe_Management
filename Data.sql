@@ -14,8 +14,9 @@ Create table TableFood
 (
 	id Int Identity Primary Key,
 	name Nvarchar(100) Not null default N'Chưa đặt tên',
-	status Nvarchar(100) Not null Default N'Trong' -- Trong|| Co nguoi
+	status Nvarchar(100) Not null Default N'Trống' -- Trong|| Co nguoi
 )
+
 GO
 Create table Account
 (
@@ -104,6 +105,9 @@ Begin
 	Set @i=@i+1
 End
 
+Update dbo.TableFood
+Set status = N'Có người'
+where id=3
 
 Select * from dbo.TableFood
 go
@@ -222,4 +226,38 @@ Begin
 End
 Go
 
+Update dbo.Bill Set status =1 where id=1
+
 Select Max(id) from dbo.Bill
+
+-- Cap nhat thong tin co nguoi
+go
+Create Trigger UTG_UpdateBillInfo
+On dbo.BillInfo For Insert, Update
+As
+Begin
+	Declare @idBill int
+	Select @idBill = idBill From inserted
+	Declare  @idTable int
+	Select @idTable = idTable from dbo.Bill Where id = @idBill and status = 0
+	Update dbo.TableFood set status = N'Co nguoi' where id = @idTable
+End
+Go
+-- Cap nhat thong tin trong
+Create trigger UTG_UpdateBill
+On dbo.Bill For Update
+As
+Begin	
+	Declare @idBill int
+	Select @idBill = id from inserted
+	Declare  @idTable int
+	Select @idTable = idTable from dbo.Bill Where id = @idBill
+	Declare @count int = 0
+	Select @count = COUNT(*) From dbo.Bill Where idTable =@idTable and status = 0
+	If(@count = 0)
+		Update dbo.TableFood Set status = N'Trong' where id = @idTable
+End
+Go
+
+Delete dbo.BillInfo
+Delete dbo.Bill
