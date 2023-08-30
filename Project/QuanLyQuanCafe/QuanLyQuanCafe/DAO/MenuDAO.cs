@@ -21,7 +21,7 @@ namespace QuanLyQuanCafe.DAO
         {
             List<MenuFood> list = new List<MenuFood>();
             DataTable data = new DataTable();
-            string query = "Select f.name,bi.count,f.price,f.price*bi.count as totalPrice from dbo.BillInfo as bi, dbo.Bill as b,dbo.Food as f\r\nWhere bi.idBill = b.id and bi.idFood=f.id and b.idTable =" +id;
+            string query = "Select f.name,bi.count,f.price,f.price*bi.count as totalPrice from dbo.BillInfo as bi, dbo.Bill as b,dbo.Food as f\r\nWhere bi.idBill = b.id and bi.idFood=f.id and b.status = 0 and b.idTable =" +id;
             data = DataProvider.Instance.ExcuteQuery(query);
             foreach (DataRow item in data.Rows)
             {

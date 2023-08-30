@@ -181,6 +181,7 @@ go
 
 Select * from dbo.Bill
 Select * From dbo.BillInfo
+Select * From dbo.TableFood
 Select * From Dbo.Food
 Select * from dbo.FoodCetagory
 

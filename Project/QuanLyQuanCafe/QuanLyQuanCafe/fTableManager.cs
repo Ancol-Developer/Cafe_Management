@@ -5,9 +5,11 @@ using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Drawing;
+using System.Globalization;
 using System.Linq;
 using System.Net.Http.Headers;
 using System.Text;
+using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
@@ -50,14 +52,19 @@ namespace QuanLyQuanCafe
         {
             lsvBill.Items.Clear();
             List<MenuFood> listBillInfor = MenuDAO.Instance.GetListMenuByTable(id);
+            float totalPrice = 0;
             foreach (MenuFood item in listBillInfor)
             {
                 ListViewItem lsvItem = new ListViewItem(item.FoodName.ToString());
                 lsvItem.SubItems.Add(item.Count.ToString());
                 lsvItem.SubItems.Add(item.Price.ToString());
                 lsvItem.SubItems.Add(item.TotalPrice.ToString());
+                totalPrice += item.TotalPrice;
                 lsvBill.Items.Add(lsvItem);
             }
+            CultureInfo culture = new CultureInfo("vi-VN");
+            //Thread.CurrentThread.CurrentCulture = culture;
+            txbTotalPrice.Text = totalPrice.ToString("c",culture);
 
         }
 
