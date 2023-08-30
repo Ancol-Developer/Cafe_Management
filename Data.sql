@@ -187,3 +187,39 @@ Select * from dbo.FoodCetagory
 
 Select f.name,bi.count,f.price,f.price*bi.count as totalPrice from dbo.BillInfo as bi, dbo.Bill as b,dbo.Food as f
 Where bi.idBill = b.id and bi.idFood=f.id and b.idTable=3
+
+go
+Create Proc USP_InsertBill
+@idTable int
+As
+Begin
+	Insert dbo.Bill (DateCheckIn,DateCheckOut,idTable,status)
+	Values (GetDate(),Null,@idTable,0)
+End
+Go
+
+Alter Proc USP_InsertBillInfo
+@idBill int, @idFood int,@count int
+As
+Begin
+	Declare @isExitsBillInfo int
+	Declare @foodCount int = 1
+	Select @isExitsBillInfo = id, @foodCount = b.count from dbo.BillInfo as b where idBill =@idBill And idFood=@idFood
+
+	If(@isExitsBillInfo>0)
+	Begin 
+		Declare @newCount Int = @foodCount + @count
+		if(@newCount>0)
+			Update dbo.BillInfo Set count= @foodCount + @count where idFood=@idFood
+		Else
+			Delete dbo.BillInfo Where idBill= @idBill and idFood= @idFood
+	End
+	Else
+	Begin
+		Insert dbo.BillInfo (idBill,idFood,count)
+		Values (@idBill,@idFood,@count)
+	End
+End
+Go
+
+Select Max(id) from dbo.Bill

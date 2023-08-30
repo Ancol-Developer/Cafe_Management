@@ -21,6 +21,7 @@ namespace QuanLyQuanCafe
         {
             InitializeComponent();
             LoadTable();
+            LoadCategory();
         }
         #region Method
         void LoadTable()
@@ -67,6 +68,18 @@ namespace QuanLyQuanCafe
             txbTotalPrice.Text = totalPrice.ToString("c",culture);
 
         }
+        void LoadCategory()
+        {
+            List<Category> listCategory = CategoryDAO.Instance.GetListCategory();
+            cbCategory.DataSource = listCategory;
+            cbCategory.DisplayMember = "Name";
+        }
+        void LoadFoodListByCategoryID(int id)
+        {
+            List<Foods> listFood= FoodDAO.Instance.GetFooByCategoryID(id);
+            cbFood.DataSource = listFood;
+            cbFood.DisplayMember = "Name";
+        }
 
 
         #endregion
@@ -74,11 +87,27 @@ namespace QuanLyQuanCafe
         private void Button_Click(object sender, EventArgs e)
         {
             int tableID=((sender as Button).Tag as Table).ID;
+            lsvBill.Tag = (sender as Button).Tag;
             ShowBill(tableID);
+
         }
         private void btnAdd_Click(object sender, EventArgs e)
-        {
-
+        {   
+            Table table = lsvBill.Tag as Table;
+            int idBill = BillDAO.Instance.GetUncheckBillIDByTableID(table.ID);
+            int idFood = (cbFood.SelectedItem as Foods).ID;
+            int count = (int)nmFoodCount.Value;
+            if (idBill == -1) // neu ko ton tai bill
+            {
+                BillDAO.Instance.InsertBill(table.ID);
+                BillInfoDAO.Instance.InsertBillInfor(BillDAO.Instance.GetMaxBill(),idFood,count);
+            }
+            else
+            {
+                BillInfoDAO.Instance.InsertBillInfor(idBill, idFood, count);
+            }
+            // reload button
+            ShowBill(table.ID);
         }
 
         private void đăngXuấtToolStripMenuItem_Click(object sender, EventArgs e)
@@ -97,6 +126,20 @@ namespace QuanLyQuanCafe
             fAdmin f = new fAdmin();
             f.ShowDialog();
         }
+        private void cbCategory_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            int id = 0;
+            ComboBox cb = sender as ComboBox;
+            if (cb.SelectedItem == null)
+            {
+                return;
+            }
+            Category selected = cb.SelectedItem as Category;
+            id = selected.ID;
+            LoadFoodListByCategoryID(id);
+        }
         #endregion
+
+
     }
 }
