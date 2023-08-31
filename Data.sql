@@ -197,8 +197,8 @@ Create Proc USP_InsertBill
 @idTable int
 As
 Begin
-	Insert dbo.Bill (DateCheckIn,DateCheckOut,idTable,status)
-	Values (GetDate(),Null,@idTable,0)
+	Insert dbo.Bill (DateCheckIn,DateCheckOut,idTable,status,discount)
+	Values (GetDate(),Null,@idTable,0,0)
 End
 Go
 
@@ -261,3 +261,8 @@ Go
 
 Delete dbo.BillInfo
 Delete dbo.Bill
+
+Alter Table dbo.Bill
+Add discount int
+
+Update dbo.Bill Set discount = 0

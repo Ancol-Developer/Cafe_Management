@@ -53,10 +53,10 @@ namespace QuanLyQuanCafe.DAO
             }
             
         }
-        public void CheckOut(int id)
+        public void CheckOut(int id, int discount)
         {
-            string query = "Update dbo.Bill Set status =1 where id = " + id;
+            string query = "Update dbo.Bill Set status = 1, discount = "+ discount+" where id = " + id;
             DataProvider.Instance.ExcuteNonQuery(query);
-        }
+        } 
     }
 }
