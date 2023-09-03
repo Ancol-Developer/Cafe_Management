@@ -1,4 +1,5 @@
-﻿using QuanLyQuanCafe.DTO;
+﻿
+using QuanLyQuanCafe.DTO;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -31,6 +32,11 @@ namespace QuanLyQuanCafe.DAO
                 list.Add(table);
             }
             return list;
+        }
+        public void SwitchTable(int idtable1, int idtable2)
+        {
+            string query = "Exec USP_SwitchTable @idTable1 , @idTable2";
+            DataProvider.Instance.ExcuteQuery(query, new object[] { idtable1, idtable2 });
         }
     }
 }

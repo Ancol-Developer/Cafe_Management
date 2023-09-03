@@ -59,7 +59,11 @@ namespace QuanLyQuanCafe.DTO
                 this.DateCheckOut = (DateTime?)dateCheckOutTemp;
             }
             this.Status = (int)row["status"];
-            this.Discount = (int)row["discount"];
+            if (row["discount"].ToString()!= string.Empty)
+            {
+                this.Discount = (int)row["discount"];
+            }
+            
         }
     }
 }

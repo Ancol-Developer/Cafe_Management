@@ -202,7 +202,7 @@ Begin
 End
 Go
 
-Alter Proc USP_InsertBillInfo
+Create Proc USP_InsertBillInfo
 @idBill int, @idFood int,@count int
 As
 Begin
@@ -232,7 +232,7 @@ Select Max(id) from dbo.Bill
 
 -- Cap nhat thong tin co nguoi
 go
-Create Trigger UTG_UpdateBillInfo
+Alter Trigger UTG_UpdateBillInfo
 On dbo.BillInfo For Insert, Update
 As
 Begin
@@ -240,7 +240,14 @@ Begin
 	Select @idBill = idBill From inserted
 	Declare  @idTable int
 	Select @idTable = idTable from dbo.Bill Where id = @idBill and status = 0
-	Update dbo.TableFood set status = N'Co nguoi' where id = @idTable
+	Declare @countBillInfo int
+	Select @countBillInfo = Count(*) from dbo.BillInfo Where idBill = @idBill
+	Declare @count int 
+	Select @count = Count(*) From dbo.BillInfo Where idBill = @idBill
+	If(@count>0)
+		Update dbo.TableFood set status = N'Có người' where id = @idTable
+	Else
+		Update dbo.TableFood set status = N'Trong' where id = @idTable
 End
 Go
 -- Cap nhat thong tin trong
@@ -258,7 +265,8 @@ Begin
 		Update dbo.TableFood Set status = N'Trong' where id = @idTable
 End
 Go
-
+--
+--
 Delete dbo.BillInfo
 Delete dbo.Bill
 
@@ -266,3 +274,46 @@ Alter Table dbo.Bill
 Add discount int
 
 Update dbo.Bill Set discount = 0
+
+
+Go
+Alter Proc USP_SwitchTable
+@idTable1 int, @idTable2 int
+As Begin
+	Declare @idFristBill int
+	Declare @idSecondBill int
+	Declare @isFristTableEmpty int = 1
+	Declare @isSecondTableEmpty int = 1
+
+	Select @idSecondBill = id from dbo.Bill Where idTable = @idTable2 and status = 0
+	Select @idFristBill = id from dbo.Bill Where idTable = @idTable1 and status = 0
+
+	If(@idFristBill is null)
+	Begin
+		Insert dbo.Bill (DateCheckIn,DateCheckOut,idTable,status) values (GetDate(),null,@idTable1,0)
+		Select @idFristBill = Max(id) From dbo.Bill where idTable = @idTable1 and status =0 
+	End
+
+	Select @isFristTableEmpty = COUNT(*) From dbo.BillInfo Where idBill = @idFristBill
+
+	If(@idSecondBill is null)
+	Begin
+		Insert dbo.Bill (DateCheckIn,DateCheckOut,idTable,status) values (GetDate(),null,@idTable2,0)
+		Select @idSecondBill = Max(id) From dbo.Bill where idTable = @idTable2 and status =0 
+	End
+
+	Select @isSecondTableEmpty = COUNT(*) From dbo.BillInfo Where idBill = @idSecondBill
+	
+
+	Select id Into IDBillInfoTable From dbo.BillInfo Where idBill = @idSecondBill
+	UpDate dbo.BillInfo Set idBill = @idSecondBill Where idBill = @idFristBill 
+	Update dbo.BillInfo Set idBill = @idFristBill where id in (Select * from IDBillInfoTable)
+	DROP TABLE IDBillInfoTable
+	if(@isFristTableEmpty = 0)
+		Update dbo.TableFood Set status = N'Trong' Where id = @idTable2
+	if(@isSecondTableEmpty = 0)
+		Update dbo.TableFood Set status = N'Trong' Where id = @idTable1
+End
+Go
+
+exec USP_SwitchTable @idTable1 = 2 ,@idTable2 = 3 
