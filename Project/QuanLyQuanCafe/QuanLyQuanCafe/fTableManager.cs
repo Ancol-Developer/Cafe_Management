@@ -161,7 +161,7 @@ namespace QuanLyQuanCafe
             {
                 if(MessageBox.Show(string.Format("Bạn có chắc chắn thanh toán cho bàn {0}\n Tổng tiền - (Tổng tiền / 100)  x Giảm giá \n = {1} - ({1}/100) x {2} = {3}",table.Name,totalPrice,discount,finalTotalPrice),"Thông báo", MessageBoxButtons.OKCancel) == System.Windows.Forms.DialogResult.OK)
                 {
-                    BillDAO.Instance.CheckOut(idBill,discount);
+                    BillDAO.Instance.CheckOut(idBill,discount, (float)finalTotalPrice);
                     ShowBill(table.ID);
                     // Load lai table sau khi thanh toan -- hien thi ban 'trong' ban 'co nguoi'
                     LoadTable();

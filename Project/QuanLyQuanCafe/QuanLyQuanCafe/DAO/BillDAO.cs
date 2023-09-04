@@ -2,7 +2,9 @@
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
+using System.Security.Policy;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -53,10 +55,14 @@ namespace QuanLyQuanCafe.DAO
             }
             
         }
-        public void CheckOut(int id, int discount)
+        public void CheckOut(int id, int discount, float totalPrice)
         {
-            string query = "Update dbo.Bill Set status = 1, discount = "+ discount+" where id = " + id;
+            string query = "Update dbo.Bill Set DateCheckOut = GetDate() , status = 1, discount = "+ discount+", totalPrice = "+ totalPrice +" where id = " + id;
             DataProvider.Instance.ExcuteNonQuery(query);
         } 
+        public DataTable GetBillListByDate(DateTime dateCheckIn, DateTime dateCheckOut)
+        {
+            return DataProvider.Instance.ExcuteQuery("Exec USP_GetListBillByDate @checkIn , @checkout", new object[] {dateCheckIn,dateCheckOut});
+        }
     }
 }

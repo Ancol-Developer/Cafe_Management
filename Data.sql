@@ -106,7 +106,7 @@ Begin
 End
 
 Update dbo.TableFood
-Set status = N'Có người'
+Set status = N'Trong'
 where id=3
 
 Select * from dbo.TableFood
@@ -202,7 +202,7 @@ Begin
 End
 Go
 
-Create Proc USP_InsertBillInfo
+Alter Proc USP_InsertBillInfo
 @idBill int, @idFood int,@count int
 As
 Begin
@@ -251,7 +251,7 @@ Begin
 End
 Go
 -- Cap nhat thong tin trong
-Create trigger UTG_UpdateBill
+Alter trigger UTG_UpdateBill
 On dbo.Bill For Update
 As
 Begin	
@@ -277,7 +277,7 @@ Update dbo.Bill Set discount = 0
 
 
 Go
-Alter Proc USP_SwitchTable
+Create Proc USP_SwitchTable
 @idTable1 int, @idTable2 int
 As Begin
 	Declare @idFristBill int
@@ -317,3 +317,20 @@ End
 Go
 
 exec USP_SwitchTable @idTable1 = 2 ,@idTable2 = 3 
+select * from dbo.Bill
+Delete Dbo.BillInfo
+Delete Dbo.Bill
+
+Alter Table dbo.Bill Add totalPrice Float
+-- Hien thi Doanh thu
+Go
+Create Proc USP_GetListBillByDate
+@checkIn date, @checkOut date
+As Begin
+	Select t.name,b.totalPrice, DateCheckIn,DateCheckOut, discount from dbo.Bill as b,dbo.TableFood as t 
+	Where DateCheckIn >= @checkIn And DateCheckOut <= @checkOut and b.status = 1
+	And b.idTable = t.id 
+End
+Go
+
+Exec USP_GetListBillByDate @checkIn , @checkOut
