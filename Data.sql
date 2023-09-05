@@ -327,10 +327,27 @@ Go
 Create Proc USP_GetListBillByDate
 @checkIn date, @checkOut date
 As Begin
-	Select t.name,b.totalPrice, DateCheckIn,DateCheckOut, discount from dbo.Bill as b,dbo.TableFood as t 
+	Select t.name as [Tên bàn],b.totalPrice as [Tổng tiền], DateCheckIn as [Ngày vào],DateCheckOut as [Ngày ra], discount as [Giảm giá] from dbo.Bill as b,dbo.TableFood as t 
 	Where DateCheckIn >= @checkIn And DateCheckOut <= @checkOut and b.status = 1
 	And b.idTable = t.id 
 End
 Go
 
 Exec USP_GetListBillByDate @checkIn , @checkOut
+Go 
+Create proc USP_UpdateAccount
+@userName Nvarchar(100), @displayName Nvarchar(100), @password Nvarchar(100), @newPassword Nvarchar(100)
+As Begin
+	Declare @isRightPass int = 0 
+	Select @isRightPass = Count(*) from Account where Username = @userName and Password = @password
+	if(@isRightPass = 1)
+	Begin
+		if(@newPassword = null Or @newPassword = '')
+		Begin
+			Update dbo.Account set DisplayName = @displayName Where Username = @userName
+		End
+		Else 
+			Update dbo.Account set DisplayName= @displayName, Password = @newPassword Where Username = @userName
+	End
+End
+Go
