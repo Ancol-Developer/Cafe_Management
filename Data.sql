@@ -351,3 +351,5 @@ As Begin
 	End
 End
 Go
+select * from dbo.Account
+Exec USP_UpdateAccount @userName = 'K9' , @displayName = 'RongK9' , @password = N'1' , @newPassword = N''

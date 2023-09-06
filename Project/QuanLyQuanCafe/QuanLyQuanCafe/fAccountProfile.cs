@@ -1,4 +1,5 @@
-﻿using QuanLyQuanCafe.DTO;
+﻿using QuanLyQuanCafe.DAO;
+using QuanLyQuanCafe.DTO;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -30,9 +31,9 @@ namespace QuanLyQuanCafe
             txbUserName.Text = LoginAccount.UserName;
             txbDisplayName.Text = LoginAccount.DisplayName;
         }
-        void UpdateAccount()
+        void UpdateAccountInfo()
         {
-            string displayName = txbUserName.Text;
+            string displayName = txbDisplayName.Text;
             string password = txbPassWord.Text;
             string newpass = txbNewPass.Text;
             string reEnterPass = txbReEnterPass.Text;
@@ -44,15 +45,36 @@ namespace QuanLyQuanCafe
             }
             else
             {
-
+                if (AccountDAO.Instance.UpdateAccount(userName, displayName, password, newpass))
+                {
+                    MessageBox.Show("Cập nhật thành công");
+                    if (updateAccount != null)
+                    {
+                        updateAccount(this,new AccountEnvent(AccountDAO.Instance.GetAccountByUserName(userName)));
+                    }
+                }
+                else
+                {
+                    MessageBox.Show("Vui lòng điền đúng mật khẩu!");
+                }
             }
         }
         #endregion
 
         #region Event
+        private event EventHandler<AccountEnvent> updateAccount;
+        public event EventHandler<AccountEnvent> UpdateAccount
+        {
+            add { updateAccount += value; } 
+            remove
+            {
+                updateAccount -= value;
+            }
+        }
+
         private void btnUpdate_Click(object sender, EventArgs e) // cap nhat
         {
-            UpdateAccount();
+            UpdateAccountInfo();
         }
 
         private void btnExit_Click(object sender, EventArgs e)
@@ -60,6 +82,15 @@ namespace QuanLyQuanCafe
             this.Close();
         }
         #endregion
+    }
+    public class AccountEnvent : EventArgs
+    {
+        private Account acc;
 
+        public Account Acc { get => acc; set => acc = value; }
+        public AccountEnvent(Account acc)
+        {
+            this.Acc = acc;
+        }
     }
 }
