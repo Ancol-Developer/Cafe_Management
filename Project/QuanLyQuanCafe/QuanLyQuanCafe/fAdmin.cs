@@ -4,12 +4,14 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
+using System.Diagnostics;
 using System.Drawing;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using System.Xml.Linq;
 
 namespace QuanLyQuanCafe
 {
@@ -53,9 +55,10 @@ namespace QuanLyQuanCafe
         }
         void AddFoodBinding() 
         {
-            txbFoodName.DataBindings.Add(new Binding("Text",dtgvFood.DataSource,"name"));
-            txbFoodID.DataBindings.Add(new Binding("Text", dtgvFood.DataSource, "ID"));
-            nmFoodPrice.DataBindings.Add(new Binding("Value", dtgvFood.DataSource, "price"));
+            // Binding data - thay doi khi click sang cai khac
+            txbFoodName.DataBindings.Add(new Binding("Text",dtgvFood.DataSource,"name",true,DataSourceUpdateMode.Never));
+            txbFoodID.DataBindings.Add(new Binding("Text", dtgvFood.DataSource, "ID", true, DataSourceUpdateMode.Never));
+            nmFoodPrice.DataBindings.Add(new Binding("Value", dtgvFood.DataSource, "price", true, DataSourceUpdateMode.Never));
         }
         #endregion
         #region Event
@@ -72,9 +75,25 @@ namespace QuanLyQuanCafe
         {
             LoadListFood();
         }
-
-        #endregion
-
+        private void btnAddFood_Click(object sender, EventArgs e)
+        {
+            string name = txbFoodName.Text;
+            int idCategory = (cbFoodCetagory.SelectedItem as Category).ID; 
+            float price = (float)nmFoodPrice.Value;
+            if (FoodDAO.Instance.InsertFood(name,idCategory,price))
+            {
+                MessageBox.Show("Thêm món thành công");
+                LoadListFood();
+                if (insertFood!=null)
+                {
+                    insertFood(this, new EventArgs());
+                }
+            }
+            else
+            {
+                MessageBox.Show("Có lỗi khi thêm thức ăn");
+            }
+        }
         private void txbFoodID_TextChanged(object sender, EventArgs e)
         {
             // Lay 1 cell trong dtgv
@@ -97,5 +116,71 @@ namespace QuanLyQuanCafe
                 cbFoodCetagory.SelectedIndex = index;
             }
         }
+        private void btnEditFood_Click(object sender, EventArgs e)
+        {
+            string name = txbFoodName.Text;
+            int idCategory = (cbFoodCetagory.SelectedItem as Category).ID;
+            float price = (float)nmFoodPrice.Value;
+            int idFood = Convert.ToInt32(txbFoodID.Text);
+            if (FoodDAO.Instance.UpdateFood(idFood,name, idCategory, price))
+            {
+                MessageBox.Show("Sửa món thành công");
+                LoadListFood();
+                if (updateFood!=null)
+                {
+                    updateFood(this,new EventArgs());
+                }
+            }
+            else
+            {
+                MessageBox.Show("Có lỗi khi sửa thức ăn");
+            }
+        }
+        private void btnDeleteFood_Click(object sender, EventArgs e)
+        {
+            int idFood = Convert.ToInt32(txbFoodID.Text);
+            if (FoodDAO.Instance.DeleteFood(idFood))
+            {
+                MessageBox.Show("Xóa món thành công");
+                LoadListFood();
+                if (deleteFood != null)
+                {
+                    deleteFood(this, new EventArgs());
+                }
+            }
+            else
+            {
+                MessageBox.Show("Có lỗi khi xóa thức ăn");
+            }
+        }
+
+        private event EventHandler insertFood;
+        public event EventHandler InsertFood
+        {
+            add { insertFood += value; } remove
+            {
+                insertFood -= value;
+            }
+        }
+        private event EventHandler deleteFood;
+        public event EventHandler DeleteFood
+        {
+            add { deleteFood += value; }
+            remove { deleteFood -= value; }
+        }
+        private event EventHandler updateFood;
+        public event EventHandler UpdateFood
+        {
+            add { updateFood += value; }
+            remove
+            {
+                updateFood -= value;
+            }
+        }
+        #endregion
+
+
+
+
     }
 }

@@ -351,5 +351,26 @@ As Begin
 	End
 End
 Go
-select * from dbo.Account
+select * from dbo.BillInfo
 Exec USP_UpdateAccount @userName = 'K9' , @displayName = 'RongK9' , @password = N'1' , @newPassword = N''
+
+Insert dbo.Food (name,idCategory,price)values (N'',0,0.0)
+Update dbo.Food set name = N'', idCategory= 5, price = 0 Where id = 4
+
+
+Go
+Create trigger USP_DeleteBillInfo
+On dbo.BillInFo for Delete
+As
+Begin
+	Declare @idBillInfo int
+	Declare @idBill int
+	Select @idBillInfo = id, @idBill = deleted.idBill From deleted
+	Declare @idTable int
+	Select @idTable = idTable From dbo.Bill Where id = @idBill
+	Declare @count int = 0
+	Select @count = Count(*) from dbo.BillInfo as bi, dbo.Bill as b Where b.id = bi.idBill and b.id = @idBill and status = 0
+	if(@count = 0)
+		Update dbo.TableFood Set status= N'Trong' where id = @idTable
+End
+Go
