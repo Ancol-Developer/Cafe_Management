@@ -33,6 +33,11 @@ namespace QuanLyQuanCafe
             AddFoodBinding();
             LoadCategoryIntoComboBox(cbFoodCetagory);
         }
+        List<Foods> SearchFoodByName(string name)
+        {
+            List<Foods> foods = FoodDAO.Instance.SearchFoodByName(name);
+            return foods;
+        }
         void LoadDateTimePickerBill()
         {
             DateTime today = DateTime.Now;
@@ -96,25 +101,31 @@ namespace QuanLyQuanCafe
         }
         private void txbFoodID_TextChanged(object sender, EventArgs e)
         {
-            // Lay 1 cell trong dtgv
-            if (dtgvFood.SelectedCells.Count > 0)
+            try 
             {
-                int id = (int)dtgvFood.SelectedCells[0].OwningRow.Cells["idCategory"].Value;
-                Category category = CategoryDAO.Instance.GetCategoryById(id);
-                //cbFoodCetagory.SelectedItem = category;
-                int index = -1;
-                int i = 0;
-                foreach (Category item in cbFoodCetagory.Items)
+                // Lay 1 cell trong dtgv
+                if (dtgvFood.SelectedCells.Count > 0)
                 {
-                    if (item.ID == category.ID)
+                    int id = (int)dtgvFood.SelectedCells[0].OwningRow.Cells["idCategory"].Value;
+                    Category category = CategoryDAO.Instance.GetCategoryById(id);
+                    //cbFoodCetagory.SelectedItem = category;
+                    int index = -1;
+                    int i = 0;
+                    foreach (Category item in cbFoodCetagory.Items)
                     {
-                        index = i;
-                        break;
+                        if (item.ID == category.ID)
+                        {
+                            index = i;
+                            break;
+                        }
+                        i++;
                     }
-                    i++;
+                    cbFoodCetagory.SelectedIndex = index;
                 }
-                cbFoodCetagory.SelectedIndex = index;
-            }
+
+            } 
+            catch { }
+            
         }
         private void btnEditFood_Click(object sender, EventArgs e)
         {
@@ -177,9 +188,13 @@ namespace QuanLyQuanCafe
                 updateFood -= value;
             }
         }
+        private void btnSearchFood_Click(object sender, EventArgs e)
+        {
+            foodList.DataSource = SearchFoodByName(txbSearchFoodName.Text);
+        }
+
+
         #endregion
-
-
 
 
     }

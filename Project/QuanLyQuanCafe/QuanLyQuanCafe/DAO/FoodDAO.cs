@@ -62,5 +62,17 @@ namespace QuanLyQuanCafe.DAO
             int result = DataProvider.Instance.ExcuteNonQuery(query);
             return result > 0;
         }
+        public List<Foods> SearchFoodByName(string name)
+        {
+            List<Foods> list = new List<Foods>();
+            string query = string.Format("Select * From dbo.Food Where name like N'%{0}%'",name);
+            DataTable data = DataProvider.Instance.ExcuteQuery(query);
+            foreach (DataRow row in data.Rows)
+            {
+                Foods food = new Foods(row);
+                list.Add(food);
+            }
+            return list;
+        }
     }
 }

@@ -351,7 +351,7 @@ As Begin
 	End
 End
 Go
-select * from dbo.BillInfo
+
 Exec USP_UpdateAccount @userName = 'K9' , @displayName = 'RongK9' , @password = N'1' , @newPassword = N''
 
 Insert dbo.Food (name,idCategory,price)values (N'',0,0.0)
@@ -374,3 +374,7 @@ Begin
 		Update dbo.TableFood Set status= N'Trong' where id = @idTable
 End
 Go
+
+select * from dbo.BillInfo
+select * from dbo.Bill
+select * from dbo.TableFood
