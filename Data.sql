@@ -378,3 +378,4 @@ Go
 select * from dbo.BillInfo
 select * from dbo.Bill
 select * from dbo.TableFood
+select Username, DisplayName, Type from dbo.Account

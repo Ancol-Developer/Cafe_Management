@@ -18,6 +18,7 @@ namespace QuanLyQuanCafe
     public partial class fAdmin : Form
     {
         BindingSource foodList = new BindingSource();
+        BindingSource accountList = new BindingSource();
         public fAdmin()
         {
             InitializeComponent();
@@ -27,11 +28,15 @@ namespace QuanLyQuanCafe
         void Load()
         {
             dtgvFood.DataSource = foodList;
+            dtgvAccount.DataSource = accountList;
             LoadDateTimePickerBill();
             LoadListBillBuyDate(dtpkFromDate.Value, dtpkToDate.Value);
             LoadListFood();
-            AddFoodBinding();
+            LoadAccount();
             LoadCategoryIntoComboBox(cbFoodCetagory);
+            AddFoodBinding();
+            AddAccountBinding();
+            
         }
         List<Foods> SearchFoodByName(string name)
         {
@@ -64,6 +69,18 @@ namespace QuanLyQuanCafe
             txbFoodName.DataBindings.Add(new Binding("Text",dtgvFood.DataSource,"name",true,DataSourceUpdateMode.Never));
             txbFoodID.DataBindings.Add(new Binding("Text", dtgvFood.DataSource, "ID", true, DataSourceUpdateMode.Never));
             nmFoodPrice.DataBindings.Add(new Binding("Value", dtgvFood.DataSource, "price", true, DataSourceUpdateMode.Never));
+        }
+        void AddAccountBinding()
+        {
+            // Binding Data
+            txbUserName.DataBindings.Add(new Binding("Text", dtgvAccount.DataSource, "UserName", true, DataSourceUpdateMode.Never));
+            txbDisplayName.DataBindings.Add(new Binding("Text", dtgvAccount.DataSource, "DisplayName", true, DataSourceUpdateMode.Never));
+            txbAccountType.DataBindings.Add(new Binding("Text", dtgvAccount.DataSource, "Type", true, DataSourceUpdateMode.Never));
+
+        }
+        void LoadAccount()
+        {
+            accountList.DataSource =AccountDAO.Instance.GetListAccount();
         }
         #endregion
         #region Event
@@ -191,6 +208,10 @@ namespace QuanLyQuanCafe
         private void btnSearchFood_Click(object sender, EventArgs e)
         {
             foodList.DataSource = SearchFoodByName(txbSearchFoodName.Text);
+        }
+        private void btnShowAccount_Click(object sender, EventArgs e)
+        {
+            LoadAccount();
         }
 
 
