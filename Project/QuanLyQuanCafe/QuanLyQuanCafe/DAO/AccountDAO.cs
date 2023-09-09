@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -21,8 +22,17 @@ namespace QuanLyQuanCafe.DAO
         // using Stor proc han che SQP injection
         public bool Login(string userName,string passWord)
         {
+            byte[] temp = ASCIIEncoding.ASCII.GetBytes(passWord);
+            byte[] hashData = new MD5CryptoServiceProvider().ComputeHash(temp);
+            string hashPass = "";
+            foreach (byte item in hashData)
+            {
+                hashPass += item;
+            }
+            //var list = hashData.ToString();
+            //list.reverse();
             string query = "Exec USP_Login @userName , @passWord";
-            DataTable result = DataProvider.Instance.ExcuteQuery(query, new object[] {userName, passWord});
+            DataTable result = DataProvider.Instance.ExcuteQuery(query, new object[] {userName, hashPass});
             return result.Rows.Count>0;
         }
         public Account GetAccountByUserName(string userName)
@@ -45,7 +55,7 @@ namespace QuanLyQuanCafe.DAO
         }
         public bool InsertAccount(string userName, string displayName, int type)
         {
-            string query = string.Format("Insert dbo.Account (Username,DisplayName,Type, Password)values (N'{0}',N'{1}',{2},1)", userName, displayName, type);
+            string query = string.Format("Insert dbo.Account (Username,DisplayName,Type, Password)values (N'{0}',N'{1}',{2},N'1962026656160185351301320480154111117132155')", userName, displayName, type);
             int result = DataProvider.Instance.ExcuteNonQuery(query);
             return result > 0;
         }
@@ -63,7 +73,7 @@ namespace QuanLyQuanCafe.DAO
         }
         public bool ResetPassword(string userName)
         {
-            string query = string.Format("Update Account set Password = N'1' Where Username = N'{0}'", userName);
+            string query = string.Format("Update Account set Password = N'1962026656160185351301320480154111117132155' Where Username = N'{0}'", userName);
             int result = DataProvider.Instance.ExcuteNonQuery(query);
             return result > 0;
         }

@@ -6,6 +6,7 @@ using System.ComponentModel;
 using System.Data;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -39,11 +40,12 @@ namespace QuanLyQuanCafe
         }
         bool Login(string userName, string passWord)
         {
-            return AccountDAO.Instance.Login(userName,passWord);
+            return AccountDAO.Instance.Login(userName, passWord);
         }
         private void btnExit_Click(object sender, EventArgs e)
         {
             Application.Exit();
+            
         }
 
         private void fLogin_FormClosing(object sender, FormClosingEventArgs e)
