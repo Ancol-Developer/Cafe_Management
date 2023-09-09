@@ -22,7 +22,7 @@ Create table Account
 (
 	Username Nvarchar(100) primary key,
 	DisplayName nvarchar(100) Not Null default N'Ancol',
-	Password Nvarchar(1000) Not Null,
+	Password Nvarchar(1000) Not Null Default 1,
 	Type int Not Null default 0 -- 1 : admin || 0 : staff
 )
 Go
@@ -378,4 +378,6 @@ Go
 select * from dbo.BillInfo
 select * from dbo.Bill
 select * from dbo.TableFood
+select * from dbo.Account
 select Username, DisplayName, Type from dbo.Account
+Insert dbo.Account (Username,DisplayName,Type) values (N'test',N'test',1)
