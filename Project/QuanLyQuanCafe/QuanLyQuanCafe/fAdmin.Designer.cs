@@ -35,6 +35,11 @@
             this.dtpkToDate = new System.Windows.Forms.DateTimePicker();
             this.dtpkFromDate = new System.Windows.Forms.DateTimePicker();
             this.panel1 = new System.Windows.Forms.Panel();
+            this.txbPageBill = new System.Windows.Forms.TextBox();
+            this.btnNextBillPage = new System.Windows.Forms.Button();
+            this.btnPrevioursBillPage = new System.Windows.Forms.Button();
+            this.bynLastBillPage = new System.Windows.Forms.Button();
+            this.btnFristBillPage = new System.Windows.Forms.Button();
             this.dtgvBill = new System.Windows.Forms.DataGridView();
             this.tpFood = new System.Windows.Forms.TabPage();
             this.panel6 = new System.Windows.Forms.Panel();
@@ -97,6 +102,7 @@
             this.panel23 = new System.Windows.Forms.Panel();
             this.btnResetPassword = new System.Windows.Forms.Button();
             this.panel25 = new System.Windows.Forms.Panel();
+            this.nmAccountType = new System.Windows.Forms.NumericUpDown();
             this.label11 = new System.Windows.Forms.Label();
             this.panel26 = new System.Windows.Forms.Panel();
             this.txbDisplayName = new System.Windows.Forms.TextBox();
@@ -111,7 +117,6 @@
             this.btnAddAccount = new System.Windows.Forms.Button();
             this.panel29 = new System.Windows.Forms.Panel();
             this.dtgvAccount = new System.Windows.Forms.DataGridView();
-            this.nmAccountType = new System.Windows.Forms.NumericUpDown();
             this.tcAdmin.SuspendLayout();
             this.tpBill.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -146,12 +151,12 @@
             this.tpAccount.SuspendLayout();
             this.panel23.SuspendLayout();
             this.panel25.SuspendLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmAccountType)).BeginInit();
             this.panel26.SuspendLayout();
             this.panel27.SuspendLayout();
             this.panel28.SuspendLayout();
             this.panel29.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtgvAccount)).BeginInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nmAccountType)).BeginInit();
             this.SuspendLayout();
             // 
             // tcAdmin
@@ -215,11 +220,67 @@
             // 
             // panel1
             // 
+            this.panel1.Controls.Add(this.txbPageBill);
+            this.panel1.Controls.Add(this.btnNextBillPage);
+            this.panel1.Controls.Add(this.btnPrevioursBillPage);
+            this.panel1.Controls.Add(this.bynLastBillPage);
+            this.panel1.Controls.Add(this.btnFristBillPage);
             this.panel1.Controls.Add(this.dtgvBill);
             this.panel1.Location = new System.Drawing.Point(6, 43);
             this.panel1.Name = "panel1";
             this.panel1.Size = new System.Drawing.Size(756, 351);
             this.panel1.TabIndex = 0;
+            // 
+            // txbPageBill
+            // 
+            this.txbPageBill.Location = new System.Drawing.Point(324, 324);
+            this.txbPageBill.Name = "txbPageBill";
+            this.txbPageBill.ReadOnly = true;
+            this.txbPageBill.Size = new System.Drawing.Size(89, 20);
+            this.txbPageBill.TabIndex = 9;
+            this.txbPageBill.Text = "1";
+            this.txbPageBill.TextAlign = System.Windows.Forms.HorizontalAlignment.Center;
+            this.txbPageBill.TextChanged += new System.EventHandler(this.txbPageBill_TextChanged);
+            // 
+            // btnNextBillPage
+            // 
+            this.btnNextBillPage.Location = new System.Drawing.Point(585, 324);
+            this.btnNextBillPage.Name = "btnNextBillPage";
+            this.btnNextBillPage.Size = new System.Drawing.Size(81, 24);
+            this.btnNextBillPage.TabIndex = 8;
+            this.btnNextBillPage.Text = "Next";
+            this.btnNextBillPage.UseVisualStyleBackColor = true;
+            this.btnNextBillPage.Click += new System.EventHandler(this.btnNextBillPage_Click);
+            // 
+            // btnPrevioursBillPage
+            // 
+            this.btnPrevioursBillPage.Location = new System.Drawing.Point(90, 324);
+            this.btnPrevioursBillPage.Name = "btnPrevioursBillPage";
+            this.btnPrevioursBillPage.Size = new System.Drawing.Size(81, 24);
+            this.btnPrevioursBillPage.TabIndex = 7;
+            this.btnPrevioursBillPage.Text = "Previours";
+            this.btnPrevioursBillPage.UseVisualStyleBackColor = true;
+            this.btnPrevioursBillPage.Click += new System.EventHandler(this.btnPrevioursBillPage_Click);
+            // 
+            // bynLastBillPage
+            // 
+            this.bynLastBillPage.Location = new System.Drawing.Point(672, 324);
+            this.bynLastBillPage.Name = "bynLastBillPage";
+            this.bynLastBillPage.Size = new System.Drawing.Size(81, 24);
+            this.bynLastBillPage.TabIndex = 6;
+            this.bynLastBillPage.Text = "Last";
+            this.bynLastBillPage.UseVisualStyleBackColor = true;
+            this.bynLastBillPage.Click += new System.EventHandler(this.bynLastBillPage_Click);
+            // 
+            // btnFristBillPage
+            // 
+            this.btnFristBillPage.Location = new System.Drawing.Point(3, 324);
+            this.btnFristBillPage.Name = "btnFristBillPage";
+            this.btnFristBillPage.Size = new System.Drawing.Size(81, 24);
+            this.btnFristBillPage.TabIndex = 5;
+            this.btnFristBillPage.Text = "Frist";
+            this.btnFristBillPage.UseVisualStyleBackColor = true;
+            this.btnFristBillPage.Click += new System.EventHandler(this.btnFristBillPage_Click);
             // 
             // dtgvBill
             // 
@@ -227,7 +288,7 @@
             this.dtgvBill.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize;
             this.dtgvBill.Location = new System.Drawing.Point(3, 3);
             this.dtgvBill.Name = "dtgvBill";
-            this.dtgvBill.Size = new System.Drawing.Size(750, 337);
+            this.dtgvBill.Size = new System.Drawing.Size(750, 320);
             this.dtgvBill.TabIndex = 0;
             // 
             // tpFood
@@ -810,6 +871,18 @@
             this.panel25.Size = new System.Drawing.Size(286, 41);
             this.panel25.TabIndex = 4;
             // 
+            // nmAccountType
+            // 
+            this.nmAccountType.Location = new System.Drawing.Point(131, 11);
+            this.nmAccountType.Maximum = new decimal(new int[] {
+            1,
+            0,
+            0,
+            0});
+            this.nmAccountType.Name = "nmAccountType";
+            this.nmAccountType.Size = new System.Drawing.Size(34, 20);
+            this.nmAccountType.TabIndex = 2;
+            // 
             // label11
             // 
             this.label11.AutoSize = true;
@@ -939,18 +1012,6 @@
             this.dtgvAccount.Size = new System.Drawing.Size(440, 328);
             this.dtgvAccount.TabIndex = 0;
             // 
-            // nmAccountType
-            // 
-            this.nmAccountType.Location = new System.Drawing.Point(131, 11);
-            this.nmAccountType.Maximum = new decimal(new int[] {
-            1,
-            0,
-            0,
-            0});
-            this.nmAccountType.Name = "nmAccountType";
-            this.nmAccountType.Size = new System.Drawing.Size(34, 20);
-            this.nmAccountType.TabIndex = 2;
-            // 
             // fAdmin
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
@@ -964,6 +1025,7 @@
             this.tpBill.ResumeLayout(false);
             this.panel2.ResumeLayout(false);
             this.panel1.ResumeLayout(false);
+            this.panel1.PerformLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dtgvBill)).EndInit();
             this.tpFood.ResumeLayout(false);
             this.panel6.ResumeLayout(false);
@@ -1005,6 +1067,7 @@
             this.panel23.ResumeLayout(false);
             this.panel25.ResumeLayout(false);
             this.panel25.PerformLayout();
+            ((System.ComponentModel.ISupportInitialize)(this.nmAccountType)).EndInit();
             this.panel26.ResumeLayout(false);
             this.panel26.PerformLayout();
             this.panel27.ResumeLayout(false);
@@ -1012,7 +1075,6 @@
             this.panel28.ResumeLayout(false);
             this.panel29.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dtgvAccount)).EndInit();
-            ((System.ComponentModel.ISupportInitialize)(this.nmAccountType)).EndInit();
             this.ResumeLayout(false);
 
         }
@@ -1103,5 +1165,10 @@
         private System.Windows.Forms.Panel panel29;
         private System.Windows.Forms.DataGridView dtgvAccount;
         private System.Windows.Forms.NumericUpDown nmAccountType;
+        private System.Windows.Forms.Button btnNextBillPage;
+        private System.Windows.Forms.Button btnPrevioursBillPage;
+        private System.Windows.Forms.Button bynLastBillPage;
+        private System.Windows.Forms.Button btnFristBillPage;
+        private System.Windows.Forms.TextBox txbPageBill;
     }
 }

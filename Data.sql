@@ -381,3 +381,30 @@ select * from dbo.TableFood
 select * from dbo.Account
 select Username, DisplayName, Type from dbo.Account
 Insert dbo.Account (Username,DisplayName,Type) values (N'test',N'test',1)
+
+Go
+Create Proc USP_GetListBillByDateAndPage
+@checkIn date, @checkOut date, @page int
+As Begin
+	Declare @pageRow int = 10
+	Declare @selectRow int = @pageRow
+	Declare @exceptRow int = (@page -1)*@pageRow
+
+	;With BillShow as( Select b.id, t.name as [Tên bàn],b.totalPrice as [Tổng tiền], DateCheckIn as [Ngày vào],DateCheckOut as [Ngày ra], discount as [Giảm giá] from dbo.Bill as b,dbo.TableFood as t 
+	Where DateCheckIn >= @checkIn And DateCheckOut <= @checkOut and b.status = 1
+	And b.idTable = t.id )
+	Select Top (@selectRow) * from BillShow Where BillShow.id Not In
+	(Select Top (@exceptRow) id  from BillShow)
+End
+Go
+
+
+Go
+Create Proc USP_GetNumBillByDate
+@checkIn date, @checkOut date
+As Begin
+	Select Count(*) from dbo.Bill as b,dbo.TableFood as t 
+	Where DateCheckIn >= @checkIn And DateCheckOut <= @checkOut and b.status = 1
+	And b.idTable = t.id 
+End
+Go
